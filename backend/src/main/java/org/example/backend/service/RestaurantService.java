@@ -25,7 +25,7 @@ public class RestaurantService {
     }
 
     public List<Restaurant> getAllFavourit () {
-        return restaurantRepository.findAllByFavouriteIs();
+        return restaurantRepository.findAllByFavouriteIsTrue();
     }
 
 
