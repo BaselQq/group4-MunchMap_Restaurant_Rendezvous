@@ -8,11 +8,11 @@ import lombok.Data;
 public class Restaurant {
 
     private  String  id;
-    private  String name;
-    private  String    description;
+    private  String  name;
+    private  String  description;
     private  Boolean favourite;
-    private  String    type;
-    private String location;
-    private ImageObject[] image;
+    private  String  type;
+    private  String  location;
+    private  ImageObject[] image;
 
 }

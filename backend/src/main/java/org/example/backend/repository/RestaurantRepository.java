@@ -14,4 +14,7 @@ public interface RestaurantRepository extends MongoRepository<Restaurant,String>
 
     List<Restaurant> findAll ();
     Optional<Restaurant> findById (String id);
+    List<Restaurant> findByType (String type);
+    List<Restaurant> findAllByFavouriteIs ();
+
 }
