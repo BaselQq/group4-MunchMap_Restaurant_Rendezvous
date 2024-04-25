@@ -17,7 +17,15 @@ public class RestaurantService {
     }
 
     public Restaurant getById (String id) {
-        return restaurantRepository.findById(id).orElseThrow();
+        return restaurantRepository.findById(id).orElse(null);
+    }
+
+    public List<Restaurant> getAllByType (String type) {
+        return restaurantRepository.findByType( type);
+    }
+
+    public List<Restaurant> getAllFavourit () {
+        return restaurantRepository.findAllByFavouriteIsTrue();
     }
 
 
