@@ -1,11 +1,13 @@
 package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.dto.RestaurantRecord;
 import org.example.backend.modul.Restaurant;
 import org.example.backend.repository.RestaurantRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -20,6 +22,18 @@ public class RestaurantService {
         return restaurantRepository.findById(id).orElseThrow();
     }
 
+    public Restaurant createNewRestaurant(RestaurantRecord newRestaurant) {
+        Restaurant restaurant = new Restaurant(
+                UUID.randomUUID().toString(),
+                newRestaurant.name(),
+                newRestaurant.description(),
+                newRestaurant.favourite(),
+                newRestaurant.type(),
+                newRestaurant.location(),
+                newRestaurant.image()
+        );
 
-
+        restaurantRepository.save(restaurant);
+        return restaurant;
+    }
 }
