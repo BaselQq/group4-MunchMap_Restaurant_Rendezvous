@@ -11,5 +11,6 @@ import lombok.Data;
 public class ImageObject {
     String id;
     String name;
-    String url;
+    String heroImageUrl;
+    String detailImageUrl;
 }
