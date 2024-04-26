@@ -35,6 +35,7 @@ public class RestaurantService {
                 UUID.randomUUID().toString(),
                 newRestaurant.name(),
                 newRestaurant.description(),
+                newRestaurant.rating(),
                 newRestaurant.favourite(),
                 newRestaurant.type(),
                 newRestaurant.location(),
