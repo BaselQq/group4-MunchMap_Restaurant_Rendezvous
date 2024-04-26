@@ -39,7 +39,8 @@ public class RestaurantService {
                 newRestaurant.rating(),
                 newRestaurant.type(),
                 newRestaurant.location(),
-                newRestaurant.image()
+                newRestaurant.heroImage(),
+                newRestaurant.detailImagesUrls()
         );
 
         restaurantRepository.save(restaurant);
