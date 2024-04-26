@@ -36,6 +36,7 @@ public class RestaurantService {
                 newRestaurant.name(),
                 newRestaurant.description(),
                 newRestaurant.favourite(),
+                newRestaurant.rating(),
                 newRestaurant.type(),
                 newRestaurant.location(),
                 newRestaurant.image()
