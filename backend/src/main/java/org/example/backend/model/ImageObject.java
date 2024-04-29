@@ -1,4 +1,4 @@
-package org.example.backend.modul;
+package org.example.backend.model;
 
 
 
