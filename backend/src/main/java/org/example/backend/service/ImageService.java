@@ -1,10 +1,9 @@
 package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.modul.ImageObject;
+import org.example.backend.model.ImageObject;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.util.UUID;
 
 @Service

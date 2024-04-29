@@ -2,7 +2,7 @@ package org.example.backend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.RestaurantRecord;
-import org.example.backend.modul.Restaurant;
+import org.example.backend.model.Restaurant;
 import org.example.backend.service.RestaurantService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,28 +21,28 @@ public class RestaurantController {
 
 
     @GetMapping("/api/restaurants")
-    public List<Restaurant> getAll () {
+    public List<Restaurant> getAllRestaurants () {
 
         return restaurantService.getAll();
     }
 
 
     @GetMapping("/api/restaurant/{id}")
-    public Restaurant byId (@PathVariable String id) {
+    public Restaurant getRestaurantById (@PathVariable String id) {
 
         return restaurantService.getById(id);
     }
 
     @GetMapping("/api/restaurants/{type}")
-    public List<Restaurant> getAllByType (@PathVariable String type) {
+    public List<Restaurant> getAllRestaurantsByType (@PathVariable String type) {
 
         return restaurantService.getAllByType(type);
     }
 
     @GetMapping("/api/favourit/restaurants")
-    public List<Restaurant> getAllFavourit () {
+    public List<Restaurant> getAllRestaurantByFavouriteIsTrue () {
 
-        return restaurantService.getAllFavourit();
+        return restaurantService.getAllFavourite();
     }
 
     @PostMapping("/api/newrestaurant")
