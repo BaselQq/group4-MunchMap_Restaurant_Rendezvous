@@ -10,7 +10,7 @@ type CardProps = {
 
 const RestaurantCard = ({restaurant}: CardProps) => {
 
-    const {name, type, description, favourite, rating, location, image} = restaurant
+    const {id, name, type, description, favourite, rating, location, image} = restaurant
     const [fav, setFav] = useState<boolean>(favourite ?? false)
 
     const handleFavClick = () => {
@@ -23,7 +23,7 @@ const RestaurantCard = ({restaurant}: CardProps) => {
             <button onClick={handleFavClick} className="absolute top-5 right-10">{fav ?
                 <HeartIcon className="h-7 w-7 text-red-400" aria-hidden="true"/> :
                 <HeartIcon className="h-7 w-7 text-gray-400" aria-hidden="true"/>}</button>
-            <Link href="#" className="flex flex-col rounded-lg text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white md:flex-row h-36 mb-2 bg-gray-50 dark:bg-gray-800">
+            <Link href={`/restaurant/${id}`} className="flex flex-col rounded-lg text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white md:flex-row h-36 mb-2 bg-gray-50 dark:bg-gray-800">
             <img
                 className="h-96 w-full rounded-t-lg object-cover md:h-auto md:w-60 md:!rounded-none md:!rounded-s-lg"
                 src={"https://tecdn.b-cdn.net/wp-content/uploads/2020/06/vertical.jpg"}
