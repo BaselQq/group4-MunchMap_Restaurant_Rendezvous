@@ -42,7 +42,7 @@ public class RestaurantController {
         return restaurantService.getAllByType(type);
     }
 
-    @GetMapping("/api/favourit/restaurants")
+    @GetMapping("/api/favourite/restaurants")
     public List<Restaurant> getAllFavourit () {
 
         return restaurantService.getAllFavourit();
@@ -90,18 +90,25 @@ public class RestaurantController {
         repo.save(restaurant.withLocation(location));
     }
 
-    @PutMapping({"/api/updaterestaurantheroimage/{id}/", "{heroImage}"})
+    @PutMapping({"/api/updaterestaurantheroimage/{id}", "{heroImage}"})
     void updateRestaurantByHeroImage(@PathVariable String id, @RequestBody HeroImage heroImage) {
         Restaurant restaurant = repo.findById(id).orElse(null);
 
         repo.save(restaurant.withHeroImage(heroImage.heroImage()));
     }
 
-    @PutMapping({"/api/updaterestaurantdetailimageurls/{id}/", "{detailImageUrls}"})
+    @PutMapping({"/api/updaterestaurantdetailimageurls/{id}", "{detailImageUrls}"})
     void updateRestaurantByDetailImageUrls(@PathVariable String id, @RequestBody DetailImagesUrls detailImageUrls) {
         Restaurant restaurant = repo.findById(id).orElse(null);
 
         repo.save(restaurant.withDetailImagesUrls(detailImageUrls.detailImageUrls()));
+    }
+
+    @DeleteMapping("/api/removerestaurant/{id}")
+    public void removeRestaurantById(@PathVariable String id) {
+        Restaurant restaurant = repo.findById(id).orElse(null);
+
+        repo.delete(restaurant);
     }
 
     @PostMapping("/api/newrestaurant")
