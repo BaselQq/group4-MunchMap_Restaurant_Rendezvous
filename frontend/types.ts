@@ -7,5 +7,12 @@ export type Restaurant = {
     type: string,
     location: string,
     heroImageUrl: string
-    image: string[]
+    image: ImageObject[]
+}
+
+export type ImageObject = {
+    detailImageUrl: string,
+    heroImageUrl: string,
+    id: string,
+    name: string,
 }
