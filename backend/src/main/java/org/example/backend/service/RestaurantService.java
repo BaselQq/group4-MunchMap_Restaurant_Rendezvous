@@ -2,7 +2,7 @@ package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.RestaurantRecord;
-import org.example.backend.modul.Restaurant;
+import org.example.backend.model.Restaurant;
 import org.example.backend.repository.RestaurantRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class RestaurantService {
         return restaurantRepository.findByType( type);
     }
 
-    public List<Restaurant> getAllFavourit () {
+    public List<Restaurant> getAllFavourite() {
         return restaurantRepository.findAllByFavouriteIsTrue();
     }
 

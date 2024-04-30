@@ -3,11 +3,13 @@
 import {Fragment, useState} from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 const navigation = [
-    { name: 'Home', href: '#', current: true },
-    { name: 'Favourite', href: '#', current: false },
-    { name: 'Add Restaurant', href: '#', current: false },
+    { name: 'Home', href: '/', current: false },
+    { name: 'Favourite', href: '/favourite', current: false },
+    { name: 'Add Restaurant', href: '/addRestaurant', current: false },
     // { name: 'Calendar', href: '#', current: false },
 ]
 
@@ -16,8 +18,9 @@ function classNames(...classes: string[]) {
 }
 
 export default function NavBar() {
-
+    const pathname = usePathname()
     const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const isActiveLink = (href: string) =>  pathname === href
 
     return (
         <Disclosure as="nav" className="bg-primary w-full fixed top-0 z-50">
@@ -38,6 +41,7 @@ export default function NavBar() {
                                 </Disclosure.Button>
                             </div>
                             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+                                <Link href="/">
                                 <div className="flex flex-shrink-0 items-center">
                                     <img
                                         className="h-10 w-auto"
@@ -46,20 +50,21 @@ export default function NavBar() {
                                     />
                                     <h1 className="text-medium font-medium text-white">Munch Map</h1>
                                 </div>
+                                </Link>
                                 <div className="hidden sm:ml-6 sm:block">
                                     <div className="flex space-x-4">
                                         {navigation.map((item) => (
-                                            <a
-                                                key={item.name}
+                                            <Link
                                                 href={item.href}
+                                                key={item.name}
                                                 className={classNames(
-                                                    item.current ? 'bg-accent-900 text-white' : 'text-gray-300 hover:bg-accent-500 hover:text-white',
+                                                    isActiveLink(item.href) ? 'bg-accent-900 text-white' : 'text-gray-300 hover:bg-accent-500 hover:text-white',
                                                     'rounded-md px-3 py-2 text-sm font-medium'
                                                 )}
-                                                aria-current={item.current ? 'page' : undefined}
+                                                aria-current={isActiveLink(item.href) ? 'page' : undefined}
                                             >
                                                 {item.name}
-                                            </a>
+                                            </Link>
                                         ))}
                                     </div>
                                 </div>
@@ -155,10 +160,10 @@ export default function NavBar() {
                                     as="a"
                                     href={item.href}
                                     className={classNames(
-                                        item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                        isActiveLink(item.href) ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                                         'block rounded-md px-3 py-2 text-base font-medium'
                                     )}
-                                    aria-current={item.current ? 'page' : undefined}
+                                    aria-current={isActiveLink(item.href) ? 'page' : undefined}
                                 >
                                     {item.name}
                                 </Disclosure.Button>
