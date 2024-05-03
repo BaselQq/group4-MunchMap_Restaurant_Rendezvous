@@ -27,7 +27,7 @@ jobs:
           path: frontend/dist/
 
   build-backend:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-bitcoin-to1mln$
     needs: build-frontend
     steps:
       - uses: actions/checkout@v4
