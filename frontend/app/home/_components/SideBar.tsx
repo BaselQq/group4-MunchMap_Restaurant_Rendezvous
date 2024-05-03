@@ -1,9 +1,18 @@
 import React from 'react';
 import Toggle from "@/app/home/_components/Toggle";
 import RadioButton from "@/app/home/_components/RadioButton";
+import {useGlobalState} from "@/services/store/store";
 
 //
 const SideBar = () => {
+
+    // Global State
+    const { restaurantCount, setIsFavouriteToggled } = useGlobalState(state => (
+        {
+            restaurantCount:  state.restaurantCount,
+            setIsFavouriteToggled: state.setIsFavouriteToggled
+        }
+    ));
     return (
         <aside id="logo-sidebar"
                className="fixed top-0 left-0 z-20 w-72 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
@@ -13,7 +22,7 @@ const SideBar = () => {
                     <li>
                         <div
                            className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white group">
-                            <span className="ms-3">36 Restaurants</span>
+                            <span className="ms-3">{restaurantCount} Restaurants</span>
                         </div>
                     </li>
                     <li>
