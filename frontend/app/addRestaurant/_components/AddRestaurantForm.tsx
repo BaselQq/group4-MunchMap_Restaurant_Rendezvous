@@ -77,7 +77,6 @@ const AddRestaurantForm = () => {
         e.preventDefault()
         axios.post("/api/newrestaurant", dataToSend).then( function (response) {
             console.log(response.data, "response.data")
-            router?.reload()
             }
         ).catch((error) =>  console.log(error, "error sending the restaurant"))
         // TODO: Add toasts
