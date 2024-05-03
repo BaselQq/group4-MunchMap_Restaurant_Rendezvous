@@ -1,18 +1,19 @@
 import React, {useState} from 'react';
 import Image from "next/image";
 import {Restaurant} from "@/types";
-import { HeartIcon } from '@heroicons/react/24/solid'
+import { HeartIcon, TrashIcon } from '@heroicons/react/24/solid'
 import Link from "next/link";
 
 type CardProps = {
     restaurant: Restaurant;
+    onSetIdToRemove: (id: string | undefined) => void
 }
 
-const RestaurantCard = ({restaurant}: CardProps) => {
+const RestaurantCard = ({restaurant, onSetIdToRemove}: CardProps) => {
 
-    const {id, name, type, description, favourite, rating, location, image} = restaurant
+    const {id, name, type, description, favourite, rating, location, heroImage, detailImagesUrls} = restaurant
     const [fav, setFav] = useState<boolean>(favourite ?? false)
-
+    const heroImageHref = heroImage ? heroImage : "https://tecdn.b-cdn.net/wp-content/uploads/2020/06/vertical.jpg"
     const handleFavClick = () => {
        setFav(!fav)
     }
@@ -22,11 +23,14 @@ const RestaurantCard = ({restaurant}: CardProps) => {
             className="relative flex flex-col rounded-lg text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white md:flex-row h-36 mb-2 bg-gray-50 dark:bg-gray-800">
             <button onClick={handleFavClick} className="absolute top-5 right-10">{fav ?
                 <HeartIcon className="h-7 w-7 text-red-400" aria-hidden="true"/> :
-                <HeartIcon className="h-7 w-7 text-gray-400" aria-hidden="true"/>}</button>
+                <HeartIcon className="h-7 w-7 text-gray-300 hover:text-gray-400" aria-hidden="true"/>}</button>
+            <button
+                className="absolute top-5 right-20"
+                onClick={() => onSetIdToRemove(id)}><TrashIcon className="h-7 w-7 text-gray-400 hover:text-gray-500" /></button>
             <Link href={`/restaurant/${id}`} className="flex flex-col rounded-lg text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white md:flex-row h-36 mb-2 bg-gray-50 dark:bg-gray-800">
             <img
                 className="h-96 w-full rounded-t-lg object-cover md:h-auto md:w-60 md:!rounded-none md:!rounded-s-lg"
-                src={"https://tecdn.b-cdn.net/wp-content/uploads/2020/06/vertical.jpg"}
+                src={heroImageHref}
                 alt=""/>
             <div className="flex flex-col justify-start p-4 w-full">
                 <h5 className="mb-2 text-xl font-medium">{name ?? "Rest Name"}</h5>

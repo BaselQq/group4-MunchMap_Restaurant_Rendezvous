@@ -2,24 +2,69 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {Restaurant} from "@/types";
 import {useRouter} from "next/navigation";
+import { HeartIcon } from '@heroicons/react/24/solid'
 
 // app/restaurant/[id].tsx
 const RestaurantDetails = ({ params }: { params: { id: string } }) => {
-
-    const {id } = params
-    const [data, setData] = useState<Restaurant | undefined>(undefined);
-    // @GetMapping
-    // api/restaurant/id
-    // http://localhost:8080/api/restaurant/1
-    const { name, description, type, rating, location, favourite, image } = data || { name: '', description: '', rating: 1, location: '', favourite: false, image: null };
-    console.log(data, "data")
-
     const router = useRouter();
+    const {id } = params
+    // Local State
+    const [data, setData] = useState<Restaurant | undefined>(undefined);
+    const { name, description, type, rating, location, favourite, heroImage, detailImagesUrls } = data || { name: '', description: '', rating: 1, location: '', favourite: false, heroImage: "", detailImagesUrls: [] };
+    const [fav, setFav] = useState<boolean>(false)
+    // TODO: Add zustand: react state management lib, so that user doesnt lose changes
+    const [isEditing, setIsEditing] = useState(false);
+    // Edit Form States
+    const [newName, setNewName] = useState(name);
+    const [newDescription, setNewDescription] = useState(description);
+    const [newLocation, setNewLocation] = useState(location);
+    const [newType, setNewType] = useState(type);
 
+    // Validation states
+    console.log(data, "data")
+    const restaurantImage = detailImagesUrls.length > 0 ? detailImagesUrls[0] : heroImage
+
+    // Handlers
+    const handleEdit = () => {
+        setIsEditing(!isEditing);
+    };
+    const handleCancel = () => {
+        setIsEditing(false);
+    }
+    const handleSave = async () => {
+            try {
+                await axios.put(`/api/updaterestaurantname/${id}/${newName ? newName : name}`);
+                await axios.put(`/api/updaterestaurantdescription/${id}/${newDescription ? newDescription : description}`);
+                await axios.put(`/api/updaterestauranttype/${id}/${newType ? newType : type}`);
+                await axios.put(`/api/updaterestaurantlocation/${id}/${newLocation ? newLocation : location}`);
+
+                setIsEditing(false);
+            } catch (error) {
+                console.error('Error updating restaurant data:', error);
+                // Handle error
+            } finally {
+                handleGetRestaurantById(`/api/restaurant/${id}`)
+            }
+    };
+    const handleFavClick = () => {
+        setFav(!fav)
+        handleUpdateFavRestaurantById(id, !fav)
+    }
+
+    // http://localhost:8080/api/updaterestaurantfavourite/{id}
+    const handleUpdateFavRestaurantById = (id: string, isFavourite: boolean) => {
+        axios.put(`/api/updaterestaurantfavourite/${id}`, {favourite: isFavourite})
+            .then(response => console.log(response, "response.data from handleUpdateFavRestaurantById"))
+            .catch(error => console.error('Error updating favourite rest:', error));
+    }
     const navigateBack = () => {
         router.back();
     };
-
+    // TODO: move all useEffects for getEndpoints to custom hook and
+    // TODO: const { restaurant || restaurant[] } = useGetRestaurantData("api/endpoints")
+    // @GetMapping
+    // api/restaurant/id
+    // http://localhost:8080/api/restaurant/1
     const handleGetRestaurantById = (url: string) => {
         axios.get(url)
             .then(response => setData(response.data))
@@ -29,17 +74,29 @@ const RestaurantDetails = ({ params }: { params: { id: string } }) => {
         if (id) handleGetRestaurantById(`/api/restaurant/${id}`)
     }, [id]);
 
+    // updateFav
+    // useEffect(() => {
+    //     if (data) setFav(favourite)
+    //
+    // }, []);
+
+    // useEffect(() => {
+    //     if (data?.name !== newName)
+    //         setNewName(name)
+    //
+    // }, [data?.name, name, newName])
+
     if (!data) {
         return <div>Loading...</div>;
     }
 
     return (
-        <div className="mt-[50px] bg-gray-100 dark:bg-gray-800 py-8">
+        <div className="mt-[50px] dark:bg-gray-800 py-8">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col md:flex-row -mx-4">
                     <div className="md:flex-1 px-4">
                         <div className="h-[460px] rounded-lg bg-gray-300 dark:bg-gray-700 mb-4">
-                            <img className="w-full h-full object-cover" src={image ? image[0]?.detailImageUrl : ""} alt="Restaurant Image" />
+                            <img className="w-full h-full object-cover" src={restaurantImage} alt="Restaurant Image" />
                         </div>
                         <div className="flex -mx-2 mb-4">
                             <div className="w-1/2 px-2">
@@ -47,16 +104,50 @@ const RestaurantDetails = ({ params }: { params: { id: string } }) => {
                                     onClick={navigateBack}
                                     className="w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700">Back</button>
                             </div>
-                            <div className="w-1/2 px-2">
-                                <button className="w-full bg-teal-300 dark:bg-gray-700 text-white dark:text-white py-2 px-4 rounded-full font-bold hover:bg-teal-400 dark:hover:bg-gray-600">Add to Favs</button>
+                            <div onClick={handleEdit}
+                                 className="w-1/2 px-2">
+                                <button className="w-full bg-teal-300 dark:bg-gray-700 text-white dark:text-white py-2 px-4 rounded-full font-bold hover:bg-teal-400 dark:hover:bg-gray-600">Edit Details</button>
                             </div>
                         </div>
                     </div>
-                    <div className="md:flex-1 px-4">
-                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">{name}</h2>
-                        <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
-                            {description}
-                        </p>
+                    <div className="relative md:flex-1 px-4">
+                        <button onClick={handleFavClick} className="absolute top-0 right-10">
+                            {fav ? <HeartIcon className="h-7 w-7 text-red-400" aria-hidden="true"/> :
+                            <HeartIcon className="h-7 w-7 text-gray-400" aria-hidden="true"/>
+                            }
+                        </button>
+                        {!isEditing ? <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-3">{name}</h2> :
+                            (
+                                <>
+                                    <div className="mb-1 flex flex-col">
+                                        <input
+                                            value={newName}
+                                            onChange={(e) => setNewName(e.target.value)}
+                                            type="text"
+                                            name="name"
+                                            id="name"
+                                            placeholder={name}
+                                            className="block w-[300px] rounded-md border-0 py-2 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-300 focus:ring-2 focus:ring-inset focus:ring-teal-400 sm:text-sm sm:leading-6"
+                                        />
+                                    </div>
+                                </>
+                            )}
+                        {!isEditing ? <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">{description}</p> :
+                            (
+                                <>
+                                    <div className="mb-1 flex flex-col">
+                                        <input
+                                            value={newDescription}
+                                            onChange={(e) => setNewDescription(e.target.value)}
+                                            type="text"
+                                            name="description"
+                                            id="description"
+                                            placeholder={description}
+                                            className="block w-[300px] rounded-md border-0 py-2 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-300 focus:ring-2 focus:ring-inset focus:ring-teal-400 sm:text-sm sm:leading-6"
+                                        />
+                                    </div>
+                                </>
+                            )}
                         <div className="flex mb-4">
                             <div className="mr-4 flex ">
                                 <span className="font-bold text-gray-700 dark:text-gray-300">Rating:</span>
@@ -72,23 +163,72 @@ const RestaurantDetails = ({ params }: { params: { id: string } }) => {
                             </div>
                             <div>
                                 <span className="font-bold text-gray-700 dark:text-gray-300">Type:</span> {" "}
-                                <span className="text-gray-600 dark:text-gray-300">{type}</span>
+                                {!isEditing ? <span className="text-gray-600 dark:text-gray-300">{type}</span> :
+                                    (
+                                        <>
+                                            <div className="mb-1 flex flex-col">
+                                                <input
+                                                    value={newType}
+                                                    onChange={(e) => setNewType(e.target.value)}
+                                                    type="text"
+                                                    name="type"
+                                                    id="type"
+                                                    placeholder={type}
+                                                    className="block w-[150px] rounded-md border-0 py-2 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-300 focus:ring-2 focus:ring-inset focus:ring-teal-400 sm:text-sm sm:leading-6"
+                                                />
+                                            </div>
+                                        </>
+                                    )}
                             </div>
                         </div>
                         <div className="mb-4">
                             <span className="font-bold text-gray-700 dark:text-gray-300">Location:</span>
                             <div className="flex items-center mt-2">
-                                <span className="text-gray-600 dark:text-gray-300">{location}</span>
+                                {!isEditing ? <span className="text-gray-600 dark:text-gray-300">{location}</span> :
+                                    (
+                                        <>
+                                            <div className="mb-1 flex flex-col">
+                                                <input
+                                                    value={newLocation}
+                                                    onChange={(e) => setNewLocation(e.target.value)}
+                                                    type="text"
+                                                    name="location"
+                                                    id="location"
+                                                    placeholder={location}
+                                                    className="block w-[300px] rounded-md border-0 py-2 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-300 focus:ring-2 focus:ring-inset focus:ring-teal-400 sm:text-sm sm:leading-6"
+                                                />
+                                                <div className="flex ">
+                                                    <div className="mr-2">
+                                                        <button
+                                                            onClick={handleCancel}
+                                                            className="w-[120px] bg-gray-900 dark:bg-gray-600 text-white text-sm py-1 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700">Cancel
+                                                        </button>
+                                                    </div>
+                                                    <div onClick={handleSave}
+                                                         className="">
+                                                        <button
+                                                            className="w-[120px] bg-teal-300 dark:bg-gray-700 text-white dark:text-white text-sm py-1 px-4 rounded-full font-bold hover:bg-teal-400 dark:hover:bg-gray-600">
+                                                            Save
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
                             </div>
                         </div>
                         <div>
                             <span className="font-bold text-gray-700 dark:text-gray-300">Restaurant Description:</span>
                             <p className="text-gray-600 dark:text-gray-300 text-sm mt-2">
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                sed ante justo. Integer euismod libero id mauris malesuada tincidunt. Vivamus commodo nulla ut
-                                lorem rhoncus aliquet. Duis dapibus augue vel ipsum pretium, et venenatis sem blandit. Quisque
-                                ut erat vitae nisi ultrices placerat non eget velit. Integer ornare mi sed ipsum lacinia, non
-                                sagittis mauris blandit. Morbi fermentum libero vel nisl suscipit, nec tincidunt mi consectetur.
+                                sed ante justo. Integer euismod libero id mauris malesuada tincidunt. Vivamus commodo
+                                nulla ut
+                                lorem rhoncus aliquet. Duis dapibus augue vel ipsum pretium, et venenatis sem blandit.
+                                Quisque
+                                ut erat vitae nisi ultrices placerat non eget velit. Integer ornare mi sed ipsum
+                                lacinia, non
+                                sagittis mauris blandit. Morbi fermentum libero vel nisl suscipit, nec tincidunt mi
+                                consectetur.
                             </p>
                         </div>
                     </div>
