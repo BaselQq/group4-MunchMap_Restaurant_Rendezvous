@@ -1,6 +1,6 @@
 import React from 'react';
-import Toggle from "@/components/Toggle";
-import RadioButton from "@/components/RadioButton";
+import Toggle from "@/app/home/_components/Toggle";
+import RadioButton from "@/app/home/_components/RadioButton";
 
 //
 const SideBar = () => {

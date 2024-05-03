@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
-import {tsStartParseAsyncArrowFromCallExpression} from "sucrase/dist/types/parser/plugins/typescript";
+import { PhotoIcon } from '@heroicons/react/24/solid'
 import axios from "axios";
 import {Restaurant} from "@/types";
 
@@ -78,11 +77,11 @@ const AddRestaurantForm = () => {
             console.log(response.data, "response.data")
             }
         ).catch((error) =>  console.log(error, "error sending the restaurant"))
+        // TODO: Add toasts
     }
 
-
     return (
-        <form>
+        <form method="POST" onSubmit={handleSubmit}>
             <div className="mt-20 space-y-12">
                 <div className="border-b border-gray-900/10 pb-12">
                     <h2 className="text-base font-semibold leading-7 text-gray-900">Add New Restaurant</h2>
@@ -147,7 +146,6 @@ const AddRestaurantForm = () => {
                                         type="text"
                                         name="heroImage"
                                         id="heroImage"
-                                        required
                                         value={heroImage}
                                         onChange={(e) => setHeroImage(e.target.value)}
                                         className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -186,7 +184,6 @@ const AddRestaurantForm = () => {
                                         type="text"
                                         name="detailsImage"
                                         id="detailsImage"
-                                        required
                                         value={detailsImage}
                                         onChange={(e) => handleAddImages(e)}
                                         className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -230,7 +227,6 @@ const AddRestaurantForm = () => {
                                     type="text"
                                     name="location"
                                     id="location"
-                                    required
                                     value={location}
                                     onChange={(e) => setLocation(e.target.value)}
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -472,11 +468,10 @@ const AddRestaurantForm = () => {
                     Cancel
                 </button>
                 <button
-                    onSubmit={handleSubmit}
                     type="submit"
                     className="rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                    Add
+                    Add This Restaurant!
                 </button>
             </div>
         </form>

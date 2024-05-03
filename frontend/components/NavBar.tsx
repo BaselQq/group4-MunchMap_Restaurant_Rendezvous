@@ -8,7 +8,6 @@ import { usePathname } from 'next/navigation'
 
 const navigation = [
     { name: 'Home', href: '/', current: false },
-    { name: 'Favourite', href: '/favourite', current: false },
     { name: 'Add Restaurant', href: '/addRestaurant', current: false },
     // { name: 'Calendar', href: '#', current: false },
 ]
@@ -20,6 +19,7 @@ function classNames(...classes: string[]) {
 export default function NavBar() {
     const pathname = usePathname()
     const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [userName, setUserName] = useState("AnonyMAUS User")
     const isActiveLink = (href: string) =>  pathname === href
 
     return (
@@ -82,9 +82,11 @@ export default function NavBar() {
                                 {/* Profile dropdown */}
                                 {isLoggedIn ? (<>
                                     <Menu as="div" className="relative ml-3">
-                                        <div>
-                                            <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                                                <span className="absolute -inset-1.5" />
+                                        <div className="flex items-center">
+                                            <span className="block px-4 text-sm text-white" >{userName}</span>
+                                            <Menu.Button
+                                                className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                                <span className="absolute -inset-1.5"/>
                                                 <span className="sr-only">Open user menu</span>
                                                 <img
                                                     className="h-8 w-8 rounded-full"
