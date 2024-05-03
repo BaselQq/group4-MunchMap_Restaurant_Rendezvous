@@ -53,12 +53,19 @@ const RestaurantGallery = () => {
         handleRemoveById(id)
     }
 
+
+
     return (
         <div className="p-4 sm:ml-72">
             <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
                 <SearchContent />
                 <div className="grid grid-cols-1 gap-4 mb-4">
-                    {data.map( (restaurant) => {
+
+                    {isFavouriteToggled ? (
+                        data.filter((r: Restaurant) => r.favourite === isFavouriteToggled).map( (restaurant) => {
+                            return  <RestaurantCard key={restaurant.id} restaurant={restaurant} onSetIdToRemove={onSetIdToRemove} />
+                        })
+                    ) : data.map( (restaurant) => {
                         return  <RestaurantCard key={restaurant.id} restaurant={restaurant} onSetIdToRemove={onSetIdToRemove} />
                     })}
                 </div>

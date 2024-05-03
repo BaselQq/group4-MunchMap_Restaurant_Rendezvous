@@ -1,3 +1,5 @@
+"use client"
+
 import NavBar from "@/components/NavBar";
 import SideBar from "@/app/home/_components/SideBar";
 import RestaurantGallery from "@/app/home/_components/RestaurantGallery";

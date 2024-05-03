@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { PhotoIcon } from '@heroicons/react/24/solid'
 import axios from "axios";
 import {Restaurant} from "@/types";
+import {useRouter} from "next/navigation";
 
 /*
   This example requires some changes to your config:
@@ -43,6 +44,7 @@ const testObject: Restaurant = {
 }
 
 const AddRestaurantForm = () => {
+    const router = useRouter()
     // Local States
     const [name, setName] = useState<string>("")
     const [description, setDescription] = useState<string>("")
@@ -56,12 +58,12 @@ const AddRestaurantForm = () => {
     const dataToSend = {
         name,
         description,
-        favourite: false,
+        favourite: true,
         rating,
         type,
         location,
-        heroImage,
-        detailImagesUrls: detailImagesUrlsState,
+        heroImage: heroImage ?? "https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        detailImagesUrls: detailImagesUrlsState ?? "https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     }
     const handleAddImages = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setDetailsImage(e.target.value)
@@ -75,6 +77,7 @@ const AddRestaurantForm = () => {
         e.preventDefault()
         axios.post("/api/newrestaurant", dataToSend).then( function (response) {
             console.log(response.data, "response.data")
+            router?.reload()
             }
         ).catch((error) =>  console.log(error, "error sending the restaurant"))
         // TODO: Add toasts
